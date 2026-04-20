@@ -17,6 +17,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ListUserUseCaseTest {
+    private static final String HASHED_PASSWORD = "hashedPassword123";
 
     @Mock
     private UserRepository userRepository;
@@ -26,9 +27,9 @@ class ListUserUseCaseTest {
 
     @Test
     void testExecuteReturnsUsers() {
-        User shakira = User.createBuyer("Shakira", new Email("shakira@barranquilla.com"));
-        User carlos = User.createBuyer("Carlos Vives", new Email("carlos@santamarta.com"));
-        User juanes = User.createBuyer("Juanes", new Email("juanes@medellin.com"));
+        User shakira = User.createBuyer("Shakira", new Email("shakira@barranquilla.com"), HASHED_PASSWORD);
+        User carlos = User.createBuyer("Carlos Vives", new Email("carlos@santamarta.com"), HASHED_PASSWORD);
+        User juanes = User.createBuyer("Juanes", new Email("juanes@medellin.com"), HASHED_PASSWORD);
         
         when(userRepository.findAll()).thenReturn(Arrays.asList(shakira, carlos, juanes));
 

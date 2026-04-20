@@ -17,6 +17,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class DeleteUserUseCaseTest {
+    private static final String HASHED_PASSWORD = "hashedPassword123";
 
     @Mock
     private UserRepository userRepository;
@@ -27,7 +28,7 @@ class DeleteUserUseCaseTest {
     @Test
     void testExecuteFound() {
         UUID id = UUID.randomUUID();
-        when(userRepository.findById(id)).thenReturn(Optional.of(User.createBuyer("Diomedes Díaz", new Email("cacique@junta.com"))));
+        when(userRepository.findById(id)).thenReturn(Optional.of(User.createBuyer("Diomedes Díaz", new Email("cacique@junta.com"), HASHED_PASSWORD)));
 
         assertDoesNotThrow(() -> deleteUserUseCase.execute(id));
         verify(userRepository).deleteById(id);

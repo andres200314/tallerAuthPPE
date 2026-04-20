@@ -16,3 +16,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
+app:
+  security:
+    secret: ${JWT_SECRET:mi-clave-secreta-super-larga-de-al-menos-256-bits-para-hmac-sha}
+    expiration: ${JWT_EXPIRATION:86400000}

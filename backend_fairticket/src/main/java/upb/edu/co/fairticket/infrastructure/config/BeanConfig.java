@@ -2,10 +2,7 @@ package upb.edu.co.fairticket.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import upb.edu.co.fairticket.domain.port.EventRepository;
-import upb.edu.co.fairticket.domain.port.PurchaseRepository;
-import upb.edu.co.fairticket.domain.port.TicketRepository;
-import upb.edu.co.fairticket.domain.port.UserRepository;
+import upb.edu.co.fairticket.domain.port.*;
 import upb.edu.co.fairticket.domain.usecase.event.CreateEventUseCase;
 import upb.edu.co.fairticket.domain.usecase.event.DeleteEventUseCase;
 import upb.edu.co.fairticket.domain.usecase.event.EditEventUseCase;
@@ -15,18 +12,26 @@ import upb.edu.co.fairticket.domain.usecase.purchase.GetPurchaseUseCase;
 import upb.edu.co.fairticket.domain.usecase.ticket.BuyTicketUseCase;
 import upb.edu.co.fairticket.domain.usecase.ticket.CancelTicketUseCase;
 import upb.edu.co.fairticket.domain.usecase.ticket.GetTicketsUseCase;
-import upb.edu.co.fairticket.domain.usecase.user.DeleteUserUseCase;
-import upb.edu.co.fairticket.domain.usecase.user.ListUserUseCase;
-import upb.edu.co.fairticket.domain.usecase.user.ModifyUserUseCase;
-import upb.edu.co.fairticket.domain.usecase.user.RegisterUserUseCase;
+import upb.edu.co.fairticket.domain.usecase.user.*;
 
 @Configuration
 public class BeanConfig {
 
     // User Use Cases
     @Bean
-    public RegisterUserUseCase registerUserUseCase(UserRepository userRepository) {
-        return new RegisterUserUseCase(userRepository);
+    public RegisterUserUseCase registerUserUseCase(
+            UserRepository userRepository,
+            CredentialEncoder credentialEncoder) {
+        return new RegisterUserUseCase(
+                userRepository, credentialEncoder);
+    }
+
+    @Bean
+    public LoginUseCase loginUseCase(
+            UserRepository userRepository,
+            CredentialEncoder credentialEncoder) {
+        return new LoginUseCase(
+                userRepository, credentialEncoder);
     }
 
     @Bean

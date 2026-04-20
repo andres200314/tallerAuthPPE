@@ -28,8 +28,8 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponse> register(@RequestBody RegisterUserRequest request) {
         var user = switch (request.role().toUpperCase()) {
-            case "ORGANIZER" -> registerUserUseCase.registerOrganizer(request.name(), request.email());
-            default -> registerUserUseCase.registerBuyer(request.name(), request.email());
+            case "ORGANIZER" -> registerUserUseCase.registerOrganizer(request.name(), request.email(), request.password());
+            default -> registerUserUseCase.registerBuyer(request.name(), request.email(), request.password());
         };
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.from(user));
     }

@@ -16,21 +16,22 @@ public class User {
     private UUID id;
     private String name;
     private Email email;
+    private String passwordHash;
     private Role role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static User createBuyer(String name, Email email) {
-        return new User(UUID.randomUUID(), name, email, Role.BUYER, LocalDateTime.now(), LocalDateTime.now());
+    public static User createBuyer(String name, Email email, String passwordHash) {
+        return new User(UUID.randomUUID(), name, email, passwordHash, Role.BUYER, LocalDateTime.now(), LocalDateTime.now());
     }
 
-    public static User createOrganizer(String name, Email email) {
-        return new User(UUID.randomUUID(), name, email, Role.ORGANIZER,
+    public static User createOrganizer(String name, Email email, String passwordHash) {
+        return new User(UUID.randomUUID(), name, email, passwordHash, Role.ORGANIZER,
                 LocalDateTime.now(), LocalDateTime.now());
     }
 
-    public static User createAdmin(String name, Email email) {
-        return new User(UUID.randomUUID(), name, email, Role.ADMIN,
+    public static User createAdmin(String name, Email email, String passwordHash) {
+        return new User(UUID.randomUUID(), name, email, passwordHash, Role.ADMIN,
                 LocalDateTime.now(), LocalDateTime.now());
     }
 

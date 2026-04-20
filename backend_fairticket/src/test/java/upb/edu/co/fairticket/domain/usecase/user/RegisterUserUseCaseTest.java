@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import upb.edu.co.fairticket.domain.model.User;
 import upb.edu.co.fairticket.domain.model.valueobjects.Email;
+import upb.edu.co.fairticket.domain.port.CredentialEncoder;
 import upb.edu.co.fairticket.domain.port.UserRepository;
 import upb.edu.co.fairticket.domain.exception.DomainException;
 
@@ -23,20 +24,27 @@ class RegisterUserUseCaseTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private CredentialEncoder credentialEncoder;
+
     @InjectMocks
     private RegisterUserUseCase registerUserUseCase;
 
+    private static final String RAW_PASSWORD = "password123";
+    private static final String HASHED_PASSWORD = "hashedPassword123";
+
     @ParameterizedTest
     @CsvSource({
-        "Carlos Vives, carlos.vives@santamarta.com",
-        "Shakira, shakira@barranquilla.com",
-        "Maluma, maluma@medellin.com"
+            "Carlos Vives, carlos.vives@santamarta.com",
+            "Shakira, shakira@barranquilla.com",
+            "Maluma, maluma@medellin.com"
     })
     void testRegisterMultipleBuyersSuccess(String name, String emailStr) {
         when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.empty());
+        when(credentialEncoder.hash(RAW_PASSWORD)).thenReturn(HASHED_PASSWORD);
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        User result = registerUserUseCase.registerBuyer(name, emailStr);
+        User result = registerUserUseCase.registerBuyer(name, emailStr, RAW_PASSWORD);
 
         assertNotNull(result);
         assertTrue(result.isBuyer());
@@ -47,14 +55,15 @@ class RegisterUserUseCaseTest {
 
     @ParameterizedTest
     @CsvSource({
-        "J Balvin, jose@vibras.com",
-        "Julio Correal, julio@rockalparque.com"
+            "J Balvin, jose@vibras.com",
+            "Julio Correal, julio@rockalparque.com"
     })
     void testRegisterMultipleOrganizersSuccess(String name, String emailStr) {
         when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.empty());
+        when(credentialEncoder.hash(RAW_PASSWORD)).thenReturn(HASHED_PASSWORD);
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        User result = registerUserUseCase.registerOrganizer(name, emailStr);
+        User result = registerUserUseCase.registerOrganizer(name, emailStr, RAW_PASSWORD);
 
         assertNotNull(result);
         assertTrue(result.isOrganizer());
@@ -63,20 +72,22 @@ class RegisterUserUseCaseTest {
 
     @Test
     void testRegisterBuyerDuplicateEmailThrowsException() {
-        when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(User.createBuyer("Existing", new Email("falcao@santamarta.com"))));
+        when(userRepository.findByEmail(any(Email.class)))
+                .thenReturn(Optional.of(User.createBuyer("Existing", new Email("falcao@santamarta.com"), HASHED_PASSWORD)));
 
-        DomainException exception = assertThrows(DomainException.class, 
-            () -> registerUserUseCase.registerBuyer("Radamel Falcao", "falcao@santamarta.com"));
+        DomainException exception = assertThrows(DomainException.class,
+                () -> registerUserUseCase.registerBuyer("Radamel Falcao", "falcao@santamarta.com", RAW_PASSWORD));
 
         assertTrue(exception.getMessage().contains("Email already registered"));
         verify(userRepository, never()).save(any());
     }
-    
+
     @Test
     void testRegisterOrganizerDuplicateEmailThrowsException() {
-        when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(User.createBuyer("Existing", new Email("goyo@chocquibtown.com"))));
+        when(userRepository.findByEmail(any(Email.class)))
+                .thenReturn(Optional.of(User.createBuyer("Existing", new Email("goyo@chocquibtown.com"), HASHED_PASSWORD)));
 
-        assertThrows(DomainException.class, 
-            () -> registerUserUseCase.registerOrganizer("Goyo", "goyo@chocquibtown.com"));
+        assertThrows(DomainException.class,
+                () -> registerUserUseCase.registerOrganizer("Goyo", "goyo@chocquibtown.com", RAW_PASSWORD));
     }
 }

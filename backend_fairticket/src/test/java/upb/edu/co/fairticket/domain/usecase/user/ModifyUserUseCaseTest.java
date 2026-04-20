@@ -18,6 +18,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ModifyUserUseCaseTest {
+    private static final String HASHED_PASSWORD = "hashedPassword123";
 
     @Mock
     private UserRepository userRepository;
@@ -28,7 +29,7 @@ class ModifyUserUseCaseTest {
     @Test
     void testExecuteSuccess() {
         UUID id = UUID.randomUUID();
-        User rigo = User.createBuyer("Rigoberto Urán", new Email("rigo@urrao.com"));
+        User rigo = User.createBuyer("Rigoberto Urán", new Email("rigo@urrao.com"), HASHED_PASSWORD);
         when(userRepository.findById(id)).thenReturn(Optional.of(rigo));
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
