@@ -13,9 +13,15 @@
 | Claim JWT | authority |
 | Propiedad YAML | app.security.secret / app.security.expiration |
 
+## Levantar el proyecto
+
+```bash
+docker-compose up --build
+```
+
 ## Comandos cURL
 
-### 1. Registro
+### 1. Registro (ORGANIZER)
 ```bash
 curl -X POST http://localhost:6001/api/security/register \
   -H "Content-Type: application/json" \
@@ -38,6 +44,22 @@ curl -X POST http://localhost:6001/api/events \
 ```
 
 ### 4. Acceso denegado (403) - BUYER intentando crear evento
+
+Registrar usuario BUYER:
+```bash
+curl -X POST http://localhost:6001/api/security/register \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"usuario2\",\"email\":\"usuario2@test.com\",\"password\":\"123456\",\"role\":\"BUYER\"}"
+```
+
+Login con BUYER y usar su token:
+```bash
+curl -X POST http://localhost:6001/api/security/login \
+  -H "Content-Type: application/json" \
+  -d "{\"email\":\"usuario2@test.com\",\"password\":\"123456\"}"
+```
+
+Intentar crear evento con token de BUYER (debe retornar 403):
 ```bash
 curl -X POST http://localhost:6001/api/events \
   -H "Authorization: Bearer <token_de_buyer>" \
