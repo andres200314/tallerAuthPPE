@@ -1,8 +1,8 @@
-# FairTicket - Taller JWT y Docker
+# FairTicket - Taller AUTH
 
 ## Datos del estudiante
 
-**Nombre:** Andrés [tu apellido]
+**Nombre:** Andrés Arroyave Cardona
 
 ## Variables individuales
 
