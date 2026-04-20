@@ -11,5 +11,17 @@ services:
     volumes:
       - fairticket-data:/var/lib/postgresql/data
 
+  app:
+    build: .
+    container_name: fairticket-app
+    ports:
+      - "6001:6001"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/fairticket
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: mysecretpassword
+    depends_on:
+      - postgres
+
 volumes:
   fairticket-data:
